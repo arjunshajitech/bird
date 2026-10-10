@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bird</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="stage" id="stage" data-state="arriving">
+    <!-- Original artwork; same bird as the tray icon (internal/assets). -->
+    <svg class="bird" id="bird" viewBox="0 0 200 200" role="img" aria-label="A small blue bird">
+      <g class="bird-body">
+        <polygon class="tail" points="12,100 60,112 20,148"/>
+        <ellipse class="tuft" cx="106" cy="44" rx="10" ry="16"/>
+        <ellipse class="body" cx="100" cy="114" rx="66" ry="62"/>
+        <ellipse class="belly" cx="114" cy="136" rx="42" ry="32"/>
+        <g class="feet">
+          <path d="M92 172 v12 M86 186 h12 M118 172 v12 M112 186 h12"/>
+        </g>
+        <ellipse class="cheek" cx="142" cy="118" rx="8" ry="6"/>
+        <g class="eye">
+          <circle class="eye-white" cx="126" cy="92" r="15"/>
+          <circle class="pupil" cx="130" cy="93" r="9"/>
+          <circle class="sparkle" cx="133" cy="89" r="3.2"/>
+          <ellipse class="lid" cx="126" cy="92" rx="16" ry="16"/>
+        </g>
+        <polygon class="beak" points="160,98 190,109 160,120"/>
+        <g class="wing-pivot">
+          <ellipse class="wing" cx="76" cy="118" rx="34" ry="21"/>
+        </g>
+      </g>
+    </svg>
+
+    <section class="bubble" id="bubble" role="alertdialog" aria-modal="false"
+             aria-labelledby="title" aria-describedby="message">
+      <p class="badge" id="badge" hidden>Snoozed reminder</p>
+      <h1 id="title"></h1>
+      <p id="message"></p>
+      <div class="actions" id="actions"></div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

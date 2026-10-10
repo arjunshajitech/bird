@@ -1,0 +1,65 @@
+# Bird configuration
+#
+# Copy to ~/.config/bird/config.yaml (or run `make install-config`) and edit.
+# Validate with:   bird --check-config
+# Bird reloads this file automatically when it changes. An invalid edit is
+# rejected and the last valid configuration stays active (see the logs).
+#
+# Every key marked "optional" may be omitted; the default is shown.
+
+app:
+  name: Bird                  # optional. Shown in notifications and the tray.
+  timezone: Local             # optional. "Local" or an IANA name, e.g. Europe/Berlin.
+  start_minimized: true       # optional. false = show a "Bird is running" notification at startup.
+  catch_up_window: 15m        # optional. A reminder missed while Bird was off/asleep is still
+                              #   shown if it is at most this late. Older ones are skipped.
+                              #   "0s" disables catch-up entirely.
+  tray: true                  # optional. Show a tray icon (needs a StatusNotifier/AppIndicator host).
+
+appearance:
+  character: bird             # optional. Only "bird" ships today.
+  always_on_top: true         # optional. Keep the reminder above other windows (X11).
+  animation_speed: normal     # optional. slow | normal | fast
+  sound_enabled: true         # optional. Play a short chirp when the bird arrives.
+  renderer: auto              # optional. auto | overlay | notification
+                              #   auto: animated overlay, falling back to a desktop notification.
+
+events:
+  # Weekday stand-up with a "join" link and a snooze button.
+  - id: daily-standup         # required. Unique; lowercase letters, digits, '-' or '_'.
+    enabled: true             # optional. false = keep the event but never show it.
+    title: "Stand-up meeting" # required.
+    message: "Stop coding. Time to meet your team!"   # optional.
+    schedule:
+      type: weekly            # required. daily | weekly
+      time: "11:00"           # required. 24-hour HH:MM, in app.timezone. Quote it!
+      days: [mon, tue, wed, thu, fri]   # weekly only. mon..sun (or monday..sunday).
+    animation:
+      type: fly-across        # optional. fly-across | none
+      stop_at: center         # optional. Only "center" today.
+    persistent: true          # optional. true = stays until you pick an action.
+                              #   false = disappears after `timeout` (counted as dismissed).
+    # timeout: 60s            # optional. Only used when persistent is false.
+    # sound: true             # optional. Per-event override of appearance.sound_enabled.
+    actions:                  # optional. Default: a single "Got it" dismiss button. Max 4.
+      - id: join
+        label: "Join meeting"
+        action: open_url      # Opens the URL in your default browser.
+        url: "https://your-meeting-url"   # http/https only. Never written to logs.
+        # acknowledge: true   # optional. false = keep the reminder open after opening the URL.
+
+      - id: snooze
+        label: "Remind me in 5 minutes"
+        action: snooze
+        minutes: 5            # optional for snooze (default 5). 1..1440.
+
+  - id: lunch
+    title: "Lunch break"
+    message: "Take a break and get some food!"
+    schedule:
+      type: daily
+      time: "13:00"
+    actions:
+      - id: dismiss
+        label: "Got it"
+        action: dismiss

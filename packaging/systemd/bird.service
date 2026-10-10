@@ -1,0 +1,26 @@
+# Bird reminder daemon — systemd *user* unit (never install system-wide).
+#
+# Install (opt-in):   make install install-service
+# Or manually:        cp packaging/systemd/bird.service ~/.config/systemd/user/
+#                     systemctl --user daemon-reload
+#                     systemctl --user enable --now bird.service
+[Unit]
+Description=Bird desktop reminders
+Documentation=https://github.com/bird-app/bird
+# Start only inside a graphical session, after it is ready, and stop with it.
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/bird
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+# Bird needs no privileges; keep it that way.
+NoNewPrivileges=yes
+# Logs go to the journal: journalctl --user -u bird -f
+
+[Install]
+WantedBy=graphical-session.target
