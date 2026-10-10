@@ -1,5 +1,21 @@
 /* Bird overlay. The window is transparent and borderless; everything visible
-   is drawn here. No remote assets: system fonts only, inline SVG artwork. */
+   is drawn here. No remote assets: bundled font, inline SVG artwork. */
+
+/* Google Sans (variable, 400-700), SIL Open Font License: fonts/OFL.txt. */
+@font-face {
+  font-family: "Google Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  src: url(fonts/google-sans-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Google Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  src: url(fonts/google-sans-latin-ext.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 :root {
   --flight: 1600ms;            /* set from appearance.animation_speed */
@@ -18,12 +34,13 @@
   --badge-ink: #8a5a00;
   --shadow: 0 18px 50px rgba(15, 30, 50, 0.28), 0 4px 12px rgba(15, 30, 50, 0.16);
 
-  --bird-blue: #3ba3e8;
-  --bird-deep: #2578c0;
-  --bird-cream: #fff3d6;
-  --bird-beak: #ff9f1c;
-  --bird-ink: #1e2a38;
-  --bird-blush: rgba(255, 143, 163, 0.75);
+  --bird-blue: #3b82e0;
+  --bird-deep: #2561c4;
+  --bird-cream: #8cc4f7;
+  --bird-line: #13295c;
+  --bird-beak: #ffa41b;
+  --bird-feet: #ffbf1f;
+  --bird-ink: #10172a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -51,7 +68,7 @@ html, body {
   height: 100%;
   background: transparent;   /* the window itself is translucent */
   overflow: hidden;
-  font-family: system-ui, -apple-system, "Segoe UI", Ubuntu, Cantarell, "Noto Sans", sans-serif;
+  font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Ubuntu, Cantarell, "Noto Sans", sans-serif;
   color: var(--ink);
   user-select: none;
   -webkit-user-select: none;
@@ -75,43 +92,63 @@ html, body {
   filter: drop-shadow(0 8px 10px rgba(15, 30, 50, 0.25));
   z-index: 1;
 }
-.tail  { fill: var(--bird-deep); }
-.tuft, .body { fill: var(--bird-blue); }
+.tail, .tuft, .body, .head, .wing { fill: var(--bird-blue); }
+.wing-pivot.back .wing { fill: var(--bird-deep); }
 .belly { fill: var(--bird-cream); }
-.wing  { fill: var(--bird-deep); }
-.cheek { fill: var(--bird-blush); }
+.tail, .tuft, .body, .head, .wing, .beak, .eye-white {
+  stroke: var(--bird-line); stroke-width: 3; stroke-linejoin: round;
+}
+.quill { fill: none; stroke: var(--bird-line); stroke-width: 2; stroke-linecap: round; opacity: 0.35; }
 .eye-white, .sparkle { fill: #fff; }
 .pupil { fill: var(--bird-ink); }
 .beak  { fill: var(--bird-beak); }
-.lid   { fill: var(--bird-blue); transform-origin: 126px 76px; transform: scaleY(0); }
-.feet path { stroke: var(--bird-beak); stroke-width: 5; stroke-linecap: round; fill: none; }
+.lid   { fill: var(--bird-blue); transform-box: fill-box; transform-origin: 50% 0; transform: scaleY(0); }
+.feet path { stroke: var(--bird-feet); stroke-width: 5; stroke-linecap: round; fill: none; }
 .feet { opacity: 0; transition: opacity 200ms ease; }
-.wing-pivot { transform-origin: 96px 112px; }
+.wing-pivot.back  { transform-origin: 98px 112px; }
+.wing-pivot.front { transform-origin: 120px 144px; }
 
 /* Flying: fast wing beats, gentle bobbing, tilted forward. */
-[data-state="arriving"] .wing-pivot,
-[data-state="leaving"]  .wing-pivot { animation: flap 140ms ease-in-out infinite alternate; }
+[data-state="arriving"] .wing-pivot.front,
+[data-state="leaving"]  .wing-pivot.front { animation: flap-front 140ms ease-in-out infinite alternate; }
+[data-state="arriving"] .wing-pivot.back,
+[data-state="leaving"]  .wing-pivot.back  { animation: flap-back 140ms ease-in-out infinite alternate; }
 [data-state="arriving"] .bird-body,
 [data-state="leaving"]  .bird-body  { animation: bob 420ms ease-in-out infinite alternate; transform-origin: 100px 110px; }
 
-@keyframes flap {
-  from { transform: rotate(-38deg) scaleY(1.1); }
-  to   { transform: rotate(22deg)  scaleY(0.85); }
+/* Both wings beat together: the front one reaches right, the back one left. */
+@keyframes flap-front {
+  from { transform: rotate(-8deg); }
+  to   { transform: rotate(26deg) scaleX(0.9); }
+}
+@keyframes flap-back {
+  from { transform: rotate(18deg); }
+  to   { transform: rotate(-24deg) scaleX(0.9); }
 }
 @keyframes bob {
   from { transform: translateY(-6px) rotate(-6deg); }
   to   { transform: translateY(6px)  rotate(-2deg); }
 }
 
-/* Perched: feet out, breathing, occasional blink and wing ruffle. */
+/* Perched: wings folded, feet out, breathing, occasional blink and wing ruffle. */
 [data-state="perched"] .feet { opacity: 1; }
 [data-state="perched"] .bird-body { animation: breathe 2.4s ease-in-out infinite; transform-origin: 100px 180px; }
 [data-state="perched"] .lid { animation: blink 4.2s infinite; }
-[data-state="perched"] .wing-pivot { animation: ruffle 5s ease-in-out infinite; }
+[data-state="perched"] .wing-pivot.front { animation: ruffle-front 5s ease-in-out infinite; }
+[data-state="perched"] .wing-pivot.back  { animation: ruffle-back 5s ease-in-out infinite; }
 
 @keyframes breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.02, 0.985); } }
 @keyframes blink { 0%, 93%, 100% { transform: scaleY(0); } 96% { transform: scaleY(1); } }
-@keyframes ruffle { 0%, 85%, 100% { transform: rotate(0); } 90% { transform: rotate(-14deg); } 95% { transform: rotate(4deg); } }
+@keyframes ruffle-front {
+  0%, 85%, 100% { transform: rotate(30deg) scale(0.62); }
+  90% { transform: rotate(4deg) scale(0.7); }
+  95% { transform: rotate(36deg) scale(0.62); }
+}
+@keyframes ruffle-back {
+  0%, 85%, 100% { transform: rotate(-30deg) scale(0.6); }
+  90% { transform: rotate(-6deg) scale(0.66); }
+  95% { transform: rotate(-34deg) scale(0.6); }
+}
 
 /* Inline flight: used when the window itself cannot be moved (Wayland). */
 .inline[data-state="arriving"] .bird { animation: inline-in var(--flight) cubic-bezier(.22,.9,.32,1) both; }

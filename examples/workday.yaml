@@ -1,0 +1,123 @@
+# Bird sample: a working day.
+#
+#   11:00 Mon-Fri  stand-up meeting
+#   13:00 daily    lunch
+#   every 30 min   drink water (every day, 09:30-18:00)
+#
+# Copy to ~/.config/bird/config.yaml and check it with:
+#   bird --check-config
+#
+# Bird schedules are daily or weekly at one time, so "every 30 minutes" is one
+# event per slot. YAML anchors (&name / *name / <<:) keep that short: each slot
+# copies the first water event and only changes its id and time. To change
+# the hours, add or remove water-HHMM entries. 13:00 is left out (lunch), and
+# 11:00 is weekends only, so water never lands on top of the meeting or lunch.
+
+app:
+  name: Bird
+  timezone: Local
+  catch_up_window: 10m
+
+appearance:
+  animation_speed: normal
+  sound_enabled: true
+
+events:
+  - id: daily-standup
+    title: "Stand-up meeting"
+    message: "Stop coding. Time to meet your team!"
+    schedule:
+      type: weekly
+      time: "11:00"
+      days: &workdays [mon, tue, wed, thu, fri]
+    persistent: true
+    actions:
+      - id: join
+        label: "Join meeting"
+        action: open_url
+        url: "https://your-meeting-url"   # replace with your meeting link
+      - id: snooze
+        label: "Remind me in 5 minutes"
+        action: snooze
+        minutes: 5
+
+  - id: lunch
+    title: "Lunch break"
+    message: "Take a break and get some food!"
+    schedule:
+      type: daily
+      time: "13:00"
+    persistent: true
+    actions:
+      - id: dismiss
+        label: "Got it"
+        action: dismiss
+      - id: snooze
+        label: "In 15 minutes"
+        action: snooze
+        minutes: 15
+
+  # Water: full definition here (&water); the other slots reuse it with <<: *water.
+  - &water
+    id: water-0930
+    schedule: {type: daily, time: "09:30"}
+    title: "Drink some water"
+    message: "Stretch your legs and refill your bottle."
+    persistent: false     # goes away on its own so missed ones don't pile up
+    timeout: 60s
+    actions:
+      - id: done
+        label: "Done"
+        action: dismiss
+      - id: later
+        label: "In 10 minutes"
+        action: snooze
+        minutes: 10
+  - <<: *water
+    id: water-1000
+    schedule: {type: daily, time: "10:00"}
+  - <<: *water
+    id: water-1030
+    schedule: {type: daily, time: "10:30"}
+  - <<: *water
+    id: water-1100-weekend   # 11:00 on weekdays is the stand-up
+    schedule: {type: weekly, time: "11:00", days: [sat, sun]}
+  - <<: *water
+    id: water-1130
+    schedule: {type: daily, time: "11:30"}
+  - <<: *water
+    id: water-1200
+    schedule: {type: daily, time: "12:00"}
+  - <<: *water
+    id: water-1230
+    schedule: {type: daily, time: "12:30"}
+  - <<: *water
+    id: water-1330
+    schedule: {type: daily, time: "13:30"}
+  - <<: *water
+    id: water-1400
+    schedule: {type: daily, time: "14:00"}
+  - <<: *water
+    id: water-1430
+    schedule: {type: daily, time: "14:30"}
+  - <<: *water
+    id: water-1500
+    schedule: {type: daily, time: "15:00"}
+  - <<: *water
+    id: water-1530
+    schedule: {type: daily, time: "15:30"}
+  - <<: *water
+    id: water-1600
+    schedule: {type: daily, time: "16:00"}
+  - <<: *water
+    id: water-1630
+    schedule: {type: daily, time: "16:30"}
+  - <<: *water
+    id: water-1700
+    schedule: {type: daily, time: "17:00"}
+  - <<: *water
+    id: water-1730
+    schedule: {type: daily, time: "17:30"}
+  - <<: *water
+    id: water-1800
+    schedule: {type: daily, time: "18:00"}

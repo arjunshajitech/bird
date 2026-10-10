@@ -7,15 +7,7 @@ when one is due a small bird flies in from the left edge of the screen, lands
 in the middle and holds up your reminder. It stays there until you act on it:
 join the meeting, snooze it, or dismiss it.
 
-![The Bird reminder overlay](docs/screenshot.png)
-
-- 🐦 Animated, transparent, borderless overlay. Not just another notification.
-- 📌 Persistent reminders stay until you choose an action.
-- 📝 Events, schedules and buttons live in `config.yaml`; no code changes needed.
-- 🔁 Hot reload: save the file and Bird picks it up. Bad edits are rejected safely.
-- 😴 Snooze, open links (http/https only), dismiss.
-- 🛡️ No duplicate reminders across restarts, crashes, config reloads or sleep.
-- 🪶 The background daemon is about 6 MB and pure Go. WebKit only loads while a bird is on screen.
+![Bird flying in with a stand-up meeting, a lunch break and a water break reminder](docs/demo.gif)
 
 ---
 
@@ -162,9 +154,12 @@ fallback is used.
 
 ### The overlay animation
 
-- On **X11** the *window itself* flies. It starts off-screen to the left and
-  glides to the centre (~60 fps, ease-out). It stays compact (640×300), so it
-  never covers the whole screen or blocks clicks elsewhere.
+- On **X11** the *window itself* flies from the left edge to the centre
+  (~60 fps, ease-out). Window managers keep windows on screen, so for the part
+  of the path beyond the screen edge the window waits at the edge and the bird
+  moves inside it. The window stays compact (640×300), so it never covers the
+  whole screen or blocks clicks elsewhere. It is kept invisible until WebKit
+  has painted, so no blank box flashes up first.
 - On **Wayland**, apps can't position their own windows. Bird runs the overlay
   through XWayland (`GDK_BACKEND=x11`) when available. Otherwise the window is
   centred and the bird flies in *inside* it.
@@ -173,8 +168,9 @@ fallback is used.
 
 Speed (`slow`/`normal`/`fast`) maps to 2.6 s / 1.6 s / 0.9 s of flight. The
 bird, its flapping, blinking and breathing are inline SVG and CSS. The chirp is
-synthesised with WebAudio, so there are no image or audio files and nothing is
-loaded from the network.
+synthesised with WebAudio. The only bundled file is the Google Sans font
+(`frontend/dist/fonts/`, SIL Open Font License), and nothing is loaded from the
+network.
 
 ---
 
@@ -463,9 +459,8 @@ display server and compositor:
 Other notes:
 
 - **Multi-monitor:** the bird lands on the monitor the window opens on
-  (usually the primary/active one). To keep it from jumping to a neighbouring
-  monitor, the flight starts a third of the window off-screen instead of fully
-  off-screen.
+  (usually the primary/active one). The window never leaves that monitor, so
+  it can't jump to a neighbouring one mid-flight.
 - **Focus:** the WM decides whether a new window takes keyboard focus. Bird's
   typing protection (above) makes accidental key presses harmless either way.
 - **Fullscreen apps / games / screen sharing:** the overlay is a normal
@@ -512,7 +507,7 @@ Tests are deterministic and cover:
 ```
 cmd/bird/              daemon + CLI (pure Go)
 cmd/bird-overlay/      Wails overlay process (build tags: desktop,production,webkit2_41)
-frontend/dist/         overlay UI: index.html, style.css, app.js (inline SVG bird)
+frontend/dist/         overlay UI: index.html, style.css, app.js (inline SVG bird), fonts/
 internal/config/       YAML schema, defaults, validation
 internal/schedule/     Schedule interface; daily/weekly; DST-safe maths
 internal/events/       Engine (state machine), persisted State

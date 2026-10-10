@@ -1,8 +1,8 @@
 // Package assets renders Bird's icon for the tray and notifications.
 //
 // The icon is drawn procedurally (anti-aliased by supersampling) so the repo
-// has no binary assets and any size can be produced. It matches the bird in
-// frontend/dist/bird.svg.
+// has no binary assets and any size can be produced. It is a simplified
+// version of the bird in frontend/dist/index.html.
 package assets
 
 import (
@@ -39,28 +39,66 @@ type layer struct {
 	c color.NRGBA
 }
 
+// grown returns the triangle scaled about its centroid, for outlines.
+func (t triangle) grown(f float64) triangle {
+	cx, cy := (t.ax+t.bx+t.cx)/3, (t.ay+t.by+t.cy)/3
+	g := func(x, y float64) (float64, float64) { return cx + (x-cx)*f, cy + (y-cy)*f }
+	ax, ay := g(t.ax, t.ay)
+	bx, by := g(t.bx, t.by)
+	px, py := g(t.cx, t.cy)
+	return triangle{ax, ay, bx, by, px, py}
+}
+
 var (
-	blue     = color.NRGBA{0x3B, 0xA3, 0xE8, 0xFF}
-	deepBlue = color.NRGBA{0x25, 0x78, 0xC0, 0xFF}
-	cream    = color.NRGBA{0xFF, 0xF3, 0xD6, 0xFF}
-	orange   = color.NRGBA{0xFF, 0x9F, 0x1C, 0xFF}
-	ink      = color.NRGBA{0x1E, 0x2A, 0x38, 0xFF}
+	blue     = color.NRGBA{0x3B, 0x82, 0xE0, 0xFF}
+	deepBlue = color.NRGBA{0x25, 0x61, 0xC4, 0xFF}
+	light    = color.NRGBA{0x8C, 0xC4, 0xF7, 0xFF}
+	line     = color.NRGBA{0x13, 0x29, 0x5C, 0xFF}
+	orange   = color.NRGBA{0xFF, 0xA4, 0x1B, 0xFF}
+	ink      = color.NRGBA{0x10, 0x17, 0x2A, 0xFF}
 	white    = color.NRGBA{0xFF, 0xFF, 0xFF, 0xFF}
-	blush    = color.NRGBA{0xFF, 0x8F, 0xA3, 0xC0}
 )
 
-// Painter's order, in a unit square, bird facing right.
-var bird = []layer{
-	{triangle{0.06, 0.50, 0.30, 0.56, 0.10, 0.74}, deepBlue}, // tail
-	{ellipse{0.53, 0.22, 0.05, 0.08}, blue},                  // head tuft
-	{ellipse{0.50, 0.57, 0.33, 0.31}, blue},                  // body
-	{ellipse{0.57, 0.68, 0.21, 0.16}, cream},                 // belly
-	{ellipse{0.38, 0.59, 0.16, 0.10}, deepBlue},              // wing
-	{ellipse{0.71, 0.59, 0.04, 0.03}, blush},                 // cheek
-	{ellipse{0.63, 0.46, 0.075, 0.075}, white},               // eye
-	{ellipse{0.65, 0.465, 0.045, 0.045}, ink},                // pupil
-	{ellipse{0.665, 0.445, 0.016, 0.016}, white},             // sparkle
-	{triangle{0.80, 0.49, 0.95, 0.545, 0.80, 0.60}, orange},  // beak
+const outline = 0.018
+
+// outlined draws e with a dark border.
+func outlined(e ellipse, c color.NRGBA) []layer {
+	return []layer{
+		{ellipse{e.cx, e.cy, e.rx + outline, e.ry + outline}, line},
+		{e, c},
+	}
+}
+
+// outlinedTri draws t with a dark border.
+func outlinedTri(t triangle, c color.NRGBA) []layer {
+	return []layer{{t.grown(1.12), line}, {t, c}}
+}
+
+// Painter's order, in a unit square, bird facing right with wings spread.
+var bird = concat(
+	outlinedTri(triangle{0.50, 0.52, 0.03, 0.27, 0.32, 0.61}, deepBlue), // back wing
+	outlinedTri(triangle{0.40, 0.67, 0.06, 0.74, 0.22, 0.84}, blue),     // tail
+	outlinedTri(triangle{0.53, 0.25, 0.62, 0.04, 0.65, 0.22}, blue),     // crest
+	outlinedTri(triangle{0.53, 0.25, 0.40, 0.13, 0.59, 0.20}, blue),     // crest
+	outlined(ellipse{0.52, 0.66, 0.24, 0.20}, blue),                     // body
+	[]layer{{ellipse{0.58, 0.71, 0.15, 0.12}, light}},                   // belly
+	outlined(ellipse{0.61, 0.40, 0.21, 0.21}, blue),                     // head
+	outlined(ellipse{0.56, 0.36, 0.07, 0.085}, white),                   // eyes
+	outlined(ellipse{0.705, 0.36, 0.06, 0.075}, white),
+	[]layer{
+		{ellipse{0.58, 0.385, 0.035, 0.035}, ink}, // pupils
+		{ellipse{0.725, 0.385, 0.03, 0.03}, ink},
+	},
+	outlinedTri(triangle{0.61, 0.46, 0.95, 0.49, 0.62, 0.54}, orange), // beak, from between the eyes
+	outlinedTri(triangle{0.59, 0.68, 0.99, 0.50, 0.62, 0.77}, blue),   // front wing
+)
+
+func concat(groups ...[]layer) []layer {
+	var all []layer
+	for _, g := range groups {
+		all = append(all, g...)
+	}
+	return all
 }
 
 const supersample = 4
