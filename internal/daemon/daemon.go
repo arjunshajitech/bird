@@ -337,7 +337,7 @@ func (d *Daemon) selectPresenter(cfg *config.Config) desktop.Presenter {
 func (d *Daemon) notifyConfigError(ctx context.Context) {
 	msg := "Bird could not load its configuration. Run `bird --check-config` for details."
 	if errors.Is(d.cfgErr, os.ErrNotExist) {
-		msg = "No configuration found at " + d.opt.ConfigPath + ". Copy config.example.yaml there."
+		msg = "No configuration found at " + d.opt.ConfigPath + ". Copy examples/workday.yaml there."
 	}
 	go d.notifyOnce(ctx, "Bird configuration problem", msg)
 }

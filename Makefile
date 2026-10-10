@@ -63,7 +63,7 @@ install-config:
 	@if [ -e $(CONFIGDIR)/config.yaml ]; then \
 	  echo "$(CONFIGDIR)/config.yaml exists; not overwriting."; \
 	else \
-	  install -m 0600 config.example.yaml $(CONFIGDIR)/config.yaml; \
+	  install -m 0600 examples/workday.yaml $(CONFIGDIR)/config.yaml; \
 	  echo "Created $(CONFIGDIR)/config.yaml — edit it, then: $(BINDIR)/bird --check-config"; \
 	fi
 

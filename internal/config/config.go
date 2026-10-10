@@ -42,7 +42,7 @@ const (
 	AnimationNone      = "none"
 )
 
-// Defaults, documented in config.example.yaml and README.md.
+// Defaults, documented in docs/CONFIGURATION.md.
 const (
 	DefaultAppName         = "Bird"
 	DefaultTimezone        = "Local"

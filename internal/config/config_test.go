@@ -217,9 +217,9 @@ func TestErrorsNeverContainURLs(t *testing.T) {
 }
 
 func TestExampleConfigIsValid(t *testing.T) {
-	c, err := Load("../../config.example.yaml")
+	c, err := Load("../../examples/workday.yaml")
 	if err != nil {
-		t.Fatalf("config.example.yaml must stay valid: %v", err)
+		t.Fatalf("examples/workday.yaml must stay valid: %v", err)
 	}
 	if len(c.Events) == 0 {
 		t.Error("example should contain events")
