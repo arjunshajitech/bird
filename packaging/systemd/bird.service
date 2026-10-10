@@ -6,7 +6,7 @@
 #                     systemctl --user enable --now bird.service
 [Unit]
 Description=Bird desktop reminders
-Documentation=https://github.com/bird-app/bird
+Documentation=https://bird.arjunshaji.me/
 # Start only inside a graphical session, after it is ready, and stop with it.
 PartOf=graphical-session.target
 After=graphical-session.target
