@@ -175,4 +175,9 @@ The UI is plain HTML/CSS/JS in `frontend/dist`. You can open
 Requirements: Go 1.25+. The daemon is pure Go; the overlay needs GTK 3 and
 WebKitGTK 4.1 (`make overlay WEBKIT_TAG=` for 4.0).
 
-The font is Google Sans (SIL Open Font License, `frontend/dist/fonts/`).
+---
+
+## License
+
+[MIT](LICENSE). The bundled Google Sans font is under the SIL Open Font
+License (`frontend/dist/fonts/OFL.txt`).

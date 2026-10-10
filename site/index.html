@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bird · reminders that fly in</title>
+  <meta name="description" content="A small Linux desktop reminder. When something is due, a little bird flies in and holds up your reminder until you answer it.">
+  <meta property="og:title" content="Bird · reminders that fly in">
+  <meta property="og:description" content="A small Linux desktop reminder for meetings, breaks, medication and anything else that happens at a fixed time.">
+  <meta property="og:image" content="assets/screenshot.png">
+  <meta name="theme-color" content="#2578c0">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Bird home">
+        <img src="favicon.svg" alt="" width="28" height="28">
+        <span>Bird</span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#install">Install</a>
+        <a href="#how">How it works</a>
+        <a href="#config">Config</a>
+        <a class="gh" href="https://github.com/arjunshajitech/bird">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Linux desktop reminders</p>
+          <h1>Reminders that fly in.</h1>
+          <p class="lead">
+            Bird runs quietly in the background. When something is due, a little
+            bird flies in from the left side of your screen and holds up the
+            reminder until you answer it.
+          </p>
+          <div class="cta">
+            <a class="btn primary" href="#install">Get started</a>
+            <a class="btn" href="https://github.com/arjunshajitech/bird">View on GitHub</a>
+          </div>
+          <p class="note">Free and open source (MIT). Written in Go. Configured with one YAML file.</p>
+        </div>
+
+        <!-- Live demo of the reminder, using the same bird as the app. -->
+        <div class="screen" aria-label="Animated example of a Bird reminder">
+          <div class="screen-bar"><span></span><span></span><span></span></div>
+          <div class="screen-body">
+            <div class="ghost-window" aria-hidden="true">
+              <i style="width:62%"></i><i style="width:80%"></i><i style="width:45%"></i>
+              <i style="width:70%"></i><i style="width:55%"></i><i style="width:76%"></i>
+            </div>
+            <div class="stage" id="stage" data-state="arriving">
+              <svg class="bird" viewBox="0 0 200 200" role="img" aria-label="A small blue bird">
+                <g class="bird-body">
+                  <g class="wing-pivot back">
+                    <path class="wing" d="M98 106 C 76 82 44 62 6 54 C 12 62 14 67 12 72 C 22 73 28 77 22 84 C 34 84 40 88 34 95 C 46 95 52 99 48 106 C 60 106 66 110 64 118 C 76 118 88 118 98 120 Z"/>
+                    <path class="quill" d="M88 104 C 66 88 46 76 24 68 M80 110 C 64 100 50 94 38 90"/>
+                  </g>
+                  <path class="tail" d="M72 134 C 54 140 34 146 12 148 C 20 154 22 158 18 165 C 32 165 40 162 44 170 C 56 162 66 156 80 150 Z"/>
+                  <g class="feet">
+                    <path d="M96 166 L88 182 M88 182 L78 180 M88 182 L84 191 M88 182 L95 190
+                             M114 168 L108 184 M108 184 L98 183 M108 184 L105 193 M108 184 L115 192"/>
+                  </g>
+                  <ellipse class="body" cx="104" cy="132" rx="48" ry="40"/>
+                  <ellipse class="belly" cx="116" cy="142" rx="30" ry="24"/>
+                  <path class="tuft" d="M104 46 C 98 34 90 28 80 26 C 94 22 106 28 112 36 C 110 24 114 14 124 8 C 122 18 122 26 124 34 C 128 26 136 22 146 22 C 138 28 134 34 132 44 Z"/>
+                  <circle class="head" cx="122" cy="80" r="42"/>
+                  <g class="eye">
+                    <ellipse class="eye-white" cx="112" cy="72" rx="14" ry="17"/>
+                    <circle class="pupil" cx="116" cy="77" r="7"/>
+                    <circle class="sparkle" cx="118" cy="73" r="2.4"/>
+                    <ellipse class="lid" cx="112" cy="72" rx="15" ry="18"/>
+                  </g>
+                  <g class="eye">
+                    <ellipse class="eye-white" cx="141" cy="72" rx="12" ry="15"/>
+                    <circle class="pupil" cx="145" cy="77" r="6"/>
+                    <circle class="sparkle" cx="147" cy="73" r="2"/>
+                    <ellipse class="lid" cx="141" cy="72" rx="13" ry="16"/>
+                  </g>
+                  <path class="beak" d="M121 94 C 134 82 164 84 190 98 C 166 110 140 113 125 107 C 118 104 117 98 121 94 Z"/>
+                  <g class="wing-pivot front">
+                    <path class="wing" d="M118 136 C146 116 172 108 198 100 C192 108 192 112 194 117 C184 119 182 123 186 128 C176 130 172 134 176 139 C166 141 160 145 162 151 C150 153 136 154 122 152 Z"/>
+                    <path class="quill" d="M130 138 C150 126 170 118 188 112 M134 146 C148 140 160 136 172 132"/>
+                  </g>
+                </g>
+              </svg>
+              <div class="bubble" aria-live="polite">
+                <p class="time" id="demo-time">11:00</p>
+                <h2 id="demo-title">Stand-up meeting</h2>
+                <p id="demo-message">Stop coding. Time to meet your team!</p>
+                <div class="actions" id="demo-actions"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Install -->
+    <section id="install" class="section alt">
+      <div class="wrap">
+        <h2 class="section-title">Install</h2>
+        <p class="section-lead">Build from source. You need Go 1.25+ and the GTK / WebKitGTK development packages.</p>
+        <div class="install">
+          <div class="term">
+            <div class="term-head">
+              <span>Debian / Ubuntu / Zorin / Mint</span>
+              <button class="copy" type="button" data-copy="install-cmd">Copy</button>
+            </div>
+<pre id="install-cmd"><code>sudo apt install build-essential pkg-config libgtk-3-dev libwebkit2gtk-4.1-dev
+git clone https://github.com/arjunshajitech/bird.git
+cd bird
+make                          # build
+./build/bird-overlay --demo   # see the bird
+make install-config           # create ~/.config/bird/config.yaml
+make install install-service  # start with your desktop session</code></pre>
+          </div>
+          <p class="small">
+            Fedora: <code>sudo dnf install gcc pkgconf gtk3-devel webkit2gtk4.1-devel</code><br>
+            Arch: <code>sudo pacman -S base-devel gtk3 webkit2gtk-4.1</code>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="section">
+      <div class="wrap">
+        <h2 class="section-title">How it works</h2>
+        <ol class="steps">
+          <li>
+            <span class="step-n">1</span>
+            <h3>Write your events</h3>
+            <p>List your reminders in <code>~/.config/bird/config.yaml</code>. Save the file and Bird picks up the change.</p>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <h3>Bird keeps time</h3>
+            <p>A small background service checks the clock and remembers what it has already shown, even across restarts.</p>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <h3>The bird lands</h3>
+            <p>At the right moment the bird flies in with your buttons. Click one, press its number, or <kbd>Esc</kbd> to snooze.</p>
+          </li>
+        </ol>
+
+        <ul class="facts">
+          <li><strong>~10 MB</strong><span>memory for the background service</span></li>
+          <li><strong>No network</strong><span>everything runs locally</span></li>
+          <li><strong>No duplicates</strong><span>restarts never repeat a reminder</span></li>
+          <li><strong>No commands</strong><span>the config can only open links</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Config -->
+    <section id="config" class="section alt">
+      <div class="wrap config-grid">
+        <div>
+          <h2 class="section-title">One small YAML file</h2>
+          <p class="section-lead">
+            Daily or weekly, at a time you choose, with the buttons you want.
+            Mistakes are caught with a clear message, and the last working
+            version keeps running.
+          </p>
+          <p>
+            <a class="link" href="https://github.com/arjunshajitech/bird/blob/master/docs/CONFIGURATION.md">Every option, explained →</a>
+          </p>
+        </div>
+<pre class="code"><code><span class="k">events</span>:
+  - <span class="k">id</span>: standup
+    <span class="k">title</span>: <span class="s">"Stand-up meeting"</span>
+    <span class="k">schedule</span>: { <span class="k">type</span>: weekly, <span class="k">time</span>: <span class="s">"11:00"</span>,
+                <span class="k">days</span>: [mon, tue, wed, thu, fri] }
+    <span class="k">actions</span>:
+      - { <span class="k">id</span>: join, <span class="k">label</span>: <span class="s">"Join meeting"</span>,
+          <span class="k">action</span>: open_url, <span class="k">url</span>: <span class="s">"https://meet.example.com/abc"</span> }
+      - { <span class="k">id</span>: snooze, <span class="k">label</span>: <span class="s">"In 5 minutes"</span>,
+          <span class="k">action</span>: snooze, <span class="k">minutes</span>: 5 }
+
+  - <span class="k">id</span>: lunch
+    <span class="k">title</span>: <span class="s">"Lunch break"</span>
+    <span class="k">schedule</span>: { <span class="k">type</span>: daily, <span class="k">time</span>: <span class="s">"13:00"</span> }</code></pre>
+      </div>
+    </section>
+
+
+    <!-- Docs -->
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Read more</h2>
+        <div class="docs">
+          <a class="doc" href="https://github.com/arjunshajitech/bird#readme">
+            <h3>README</h3><p>Quick start, everyday use, troubleshooting.</p>
+          </a>
+          <a class="doc" href="https://github.com/arjunshajitech/bird/blob/master/docs/CONFIGURATION.md">
+            <h3>Configuration</h3><p>Every YAML key, flag and environment variable, with recipes.</p>
+          </a>
+          <a class="doc" href="https://github.com/arjunshajitech/bird/blob/master/docs/ARCHITECTURE.md">
+            <h3>How it works inside</h3><p>Design, libraries, the reminder engine, and what it costs to run.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p>Bird is a small open-source side project, released under the <a href="https://github.com/arjunshajitech/bird/blob/master/LICENSE">MIT License</a>.</p>
+      <p><a href="https://github.com/arjunshajitech/bird">github.com/arjunshajitech/bird</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
