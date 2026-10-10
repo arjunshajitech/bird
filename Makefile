@@ -23,7 +23,7 @@ OVERLAY_TAGS := desktop$(comma)production$(if $(WEBKIT_TAG),$(comma)$(WEBKIT_TAG
 LDFLAGS := -s -w -X main.version=$(VERSION)
 
 .PHONY: all bird overlay test fmt vet check-deps install install-config install-service \
-        uninstall uninstall-service site clean
+        uninstall uninstall-service clean
 
 all: bird overlay
 
@@ -83,16 +83,6 @@ uninstall-service:
 #   rm -r ~/.config/bird ~/.local/state/bird ~/.cache/bird
 uninstall: uninstall-service
 	rm -f $(BINDIR)/bird $(BINDIR)/bird-overlay
-
-# Website for GitHub Pages: site/ plus the screenshot and font → build/site.
-# Preview locally: python3 -m http.server -d build/site
-site:
-	rm -rf $(BUILD)/site
-	install -d $(BUILD)/site/assets $(BUILD)/site/fonts
-	cp site/* $(BUILD)/site/
-	cp docs/screenshot.png $(BUILD)/site/assets/
-	cp frontend/dist/fonts/*.woff2 frontend/dist/fonts/OFL.txt $(BUILD)/site/fonts/
-	touch $(BUILD)/site/.nojekyll
 
 clean:
 	rm -rf $(BUILD)

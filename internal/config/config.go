@@ -42,7 +42,7 @@ const (
 	AnimationNone      = "none"
 )
 
-// Defaults, documented in docs/CONFIGURATION.md.
+// Defaults, documented in bird-docs/CONFIGURATION.md.
 const (
 	DefaultAppName         = "Bird"
 	DefaultTimezone        = "Local"

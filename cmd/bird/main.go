@@ -109,7 +109,7 @@ func checkConfig(path string, stdout, stderr io.Writer) int {
 	cfg, err := config.Load(path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			fmt.Fprintf(stderr, "no configuration at %s\nCreate one from examples/workday.yaml (see docs/CONFIGURATION.md).\n", path)
+			fmt.Fprintf(stderr, "no configuration at %s\nCreate one from examples/workday.yaml (see bird-docs/CONFIGURATION.md).\n", path)
 		} else {
 			fmt.Fprintf(stderr, "%s: %v\n", path, err)
 		}

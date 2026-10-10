@@ -4,7 +4,7 @@ A small Linux desktop reminder. When something is due, a little bird flies
 in from the left side of the screen and holds up your reminder until you
 answer it.
 
-![Bird flying in with a stand-up meeting, a lunch break and a water break reminder](docs/demo.gif)
+![Bird flying in with a stand-up meeting, a lunch break and a water break reminder](bird-docs/demo.gif)
 
 You can use it for anything that happens at a fixed time: a meeting, lunch,
 a water break, medication, a stretch, a weekly report, the end of your work
@@ -69,7 +69,7 @@ Save the file and Bird picks up the change by itself. If you make a mistake,
 it keeps the previous version running and tells you what's wrong.
 
 Everything you can put in the file is described in
-**[docs/CONFIGURATION.md](docs/CONFIGURATION.md)**. A longer example is in
+**[bird-docs/CONFIGURATION.md](bird-docs/CONFIGURATION.md)**. A longer example is in
 [`examples/workday.yaml`](examples/workday.yaml).
 
 ---
@@ -103,7 +103,7 @@ Everything you can put in the file is described in
 
 How all of this works inside (design, libraries, the reminder state machine,
 memory and CPU use) is explained in
-**[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
+**[bird-docs/ARCHITECTURE.md](bird-docs/ARCHITECTURE.md)**.
 
 ---
 

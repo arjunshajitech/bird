@@ -84,7 +84,8 @@ bird/
 │   └── assets/                    procedurally drawn PNG icon
 ├── examples/workday.yaml          starter configuration (also checked by a unit test)
 ├── packaging/systemd/bird.service user unit
-├── docs/                          these documents, demo GIF/MP4, screenshot
+├── docs/                          the website (GitHub Pages)
+├── bird-docs/                     these documents, demo GIF/MP4, screenshot
 ├── Makefile                       build/test/install targets
 └── SPEC.md                        the original product brief
 ```
